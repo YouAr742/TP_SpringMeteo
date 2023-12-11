@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<h1>Meteo Informations</h1>
+<!-- Utilize the data passed by the controller for the first API -->
+<!--
+<p>Weather for address: <span th:text="${address}"></span></p>
+
+Display information from the first API (Etalab Adresse)
+<p th:if="${adresseResponse}">
+    Coordinates: <span th:text="${adresseResponse.features[0].geometry.coordinates[0] + ', ' + adresseResponse.features[0].geometry.coordinates[1]}"></span><br>
+    Type: <span th:text="${adresseResponse.getType()}"></span><br>
+    Properties: <span th:text="${adresseResponse.features[0].properties.getCity() + ', ' + adresseResponse.features[0].properties.getLabel() + ', ' + adresseResponse.features[0].properties.getContext()}"></span>
+</p>
+
+<p th:if="${weatherResponse != null}">
+    <p th:text="'Température minimale : ' + ${tmin_0} + '°C'"></p>
+    <p th:text="'Température maximale : ' + ${tmax_0} + '°C'"></p>
+    <p th:text="'probaRain : ' + ${probarain_0} + '%'"></p>
+    <p th:text="'weather : ' + ${weather_0}"></p>
+    <p th:text="'wind10m : ' + ${wind10m_0} + 'm/s'"></p>
+</p>
+-->
+<section class="vh-100" style="background-color: #4B515D">
+    <div class="container py-5 h-100">
+
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-8 col-lg-6 col-xl-4">
+
+                <div class="card" style="color: #4B515D; border-radius: 35px; background-color: bisque">
+                    <div class="card-body p-10" >
+
+                        <div class="d-flex">
+                            <h6 class="flex-grow-1" th:if="${adresseResponse}" >
+                                <span th:text="${adresseResponse.features[0].properties.getCity()}"></span>
+                            </h6>
+                            <h6 th:text="${#dates.format(#dates.createNow(), 'HH:mm')}"></h6>
+                        </div>
+
+                        <div class="d-flex flex-column text-center mt-4 mb-4">
+                            <h6 class="display-4 mb-0 font-weight-bold" style="color: #1C2331;"> <span th:text="${(tmin_0+tmax_0)/2} + '°C'"></span> </h6>
+                            <span th:if="${(tmin_0 + tmax_0) / 2 <= 0}" class="small" style="color: #868B94">Freezing</span>
+                            <span th:if="${(tmin_0 + tmax_0) / 2 > 0 and (tmin_0 + tmax_0) / 2 <= 10}" class="small" style="color: #868B94">Cold</span>
+                            <span th:if="${(tmin_0 + tmax_0) / 2 > 10 and (tmin_0 + tmax_0) / 2 <= 20}" class="small" style="color: #868B94">Mild</span>
+                            <span th:if="${(tmin_0 + tmax_0) / 2 > 20 and (tmin_0 + tmax_0) / 2 <= 30}" class="small" style="color: #868B94">Warm</span>
+                            <span th:if="${(tmin_0 + tmax_0) / 2 > 30 }" class="small" style="color: #868B94">Hot</span>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1" style="font-size: 1rem;">
+
+                                <div><i class="fa-solid fa-temperature-low" style="color: #868B94;"></i>
+                                    <span class="ms-1">
+                                        <span th:text="'Temp min : ' + ${tmin_0} + '°C'"></span>
+                                    </span>
+                                </div>
+                                <div><i class="fa-solid fa-temperature-high" style="color: #868B94;"></i> <span class="ms-1">
+                                    <span th:text="'Temp max : ' + ${tmax_0} + '°C'"></spanth:text></span>
+                                </span>
+                                </div>
+                                <div><i class="fa-solid fa-cloud-rain" style="color: #868B94;"></i> <span class="ms-1">
+                                <span th:text="'probaRain : ' + ${probarain_0} + '%'"></span>
+                                </span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <img th:if="${weather_0 <= 3}" th:src="@{/icon/sunny.svg}" alt="Sunny" style="width: 150px; height: 150px;"/>
+                                <img th:if="${weather_0 >= 4 and weather_0 <= 7}" th:src="@{/icon/cloudy.svg}" alt="Cloudy" style="width: 100px; height: 100px;"/>
+                                <img th:if="${(weather_0 >= 10 and weather_0 <= 16) or (weather_0 >= 40 and weather_0 <= 48) or (weather_0 >= 210 and weather_0 <= 212) or weather_0 == 235}" th:src="@{/icon/rainy.svg}" alt="Rainy" style="width: 100px; height: 100px;"/>
+                                <img th:if="${(weather_0 >= 20 and weather_0 <= 32) or (weather_0 >= 60 and weather_0 <= 78) or (weather_0 >= 220 and weather_0 <= 232)}" th:src="@{/icon/snowy.svg}" alt="Snowy" style="width: 100px; height: 100px;"/>
+                                <img th:if="${weather_0 >= 100 and weather_0 <= 142}" th:src="@{/icon/thunder.svg}" alt="Thunder" style="width: 100px; height: 100px;"/>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<h1 th:text="'Météo pour les prochaines 7 jours de ' + ${city}" class="text-center p-5"></h1>
+
+
+<div class="container">
+    <div class="row row-cols-4">
+        <div class="col">
+            <div class="card bg-light text-center shadow mb-5" style="width: 20rem; border-radius: 20%;">
+                <div class="card-header">
+                    <h4 th:text="${date_1}"></h4>
+                </div>
+                <img th:src="${'icon/' + icon_1}" class="card-img-top">
+
+                <div class="card-body">
+                    <p class="card-text" th:text="'Température minimale : ' + ${tmin_1} + '°C'"></p>
+                    <p class="card-text" th:text="'Température maximale : ' + ${tmax_1} + '°C'"></p>
+                    <p class="card-text" th:text="'Probabilité de pluie : ' + ${probarain_1} + '%'"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card bg-light text-center shadow" style="width: 20rem; border-radius: 10%;">
+                <div class="card-header">
+                    <h4 th:text="${date_2}"></h4>
+                </div>
+                <img th:src="${'icon/' + icon_2}" class="card-img-top">
+
+                <div class="card-body">
+                    <p class="card-text" th:text="'Température minimale : ' + ${tmin_2} + '°C'"></p>
+                    <p class="card-text" th:text="'Température maximale : ' + ${tmax_2} + '°C'"></p>
+                    <p class="card-text" th:text="'Probabilité de pluie : ' + ${probarain_2} + '%'"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card bg-light text-center shadow" style="width: 20rem; border-radius: 10%;">
+                <div class="card-header">
+                    <h4 th:text="${date_3}"></h4>
+                </div>
+                <img th:src="${'icon/' + icon_3}" class="card-img-top">
+
+                <div class="card-body">
+                    <p class="card-text" th:text="'Température minimale : ' + ${tmin_3} + '°C'"></p>
+                    <p class="card-text" th:text="'Température maximale : ' + ${tmax_3} + '°C'"></p>
+                    <p class="card-text" th:text="'Probabilité de pluie : ' + ${probarain_3} + '%'"></p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col">
+            <div class="card bg-light text-center shadow" style="width: 20rem; border-radius: 10%;">
+                <div class="card-header">
+                    <h4 th:text="${date_4}"></h4>
+                </div>
+                <img th:src="${'icon/' + icon_4}" class="card-img-top">
+
+                <div class="card-body">
+                    <p class="card-text" th:text="'Température minimale : ' + ${tmin_4} + '°C'"></p>
+                    <p class="card-text" th:text="'Température maximale : ' + ${tmax_4} + '°C'"></p>
+                    <p class="card-text" th:text="'Probabilité de pluie : ' + ${probarain_4} + '%'"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card bg-light text-center shadow mb-5" style="width: 20rem; border-radius: 10%;">
+                <div class="card-header">
+                    <h4 th:text="${date_5}"></h4>
+                </div>
+                <img th:src="${'icon/' + icon_5}" class="card-img-top">
+
+                <div class="card-body">
+                    <p class="card-text" th:text="'Température minimale : ' + ${tmin_5} + '°C'"></p>
+                    <p class="card-text" th:text="'Température maximale : ' + ${tmax_5} + '°C'"></p>
+                    <p class="card-text" th:text="'Probabilité de pluie : ' + ${probarain_5} + '%'"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card bg-light text-center shadow" style="width: 20rem; border-radius: 10%;">
+                <div class="card-header">
+                    <h4 th:text="${date_6}"></h4>
+                </div>
+                <img th:src="${'icon/' + icon_6}" class="card-img-top">
+
+                <div class="card-body">
+                    <p class="card-text" th:text="'Température minimale : ' + ${tmin_6} + '°C'"></p>
+                    <p class="card-text" th:text="'Température maximale : ' + ${tmax_6} + '°C'"></p>
+                    <p class="card-text" th:text="'Probabilité de pluie : ' + ${probarain_6} + '%'"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card bg-light text-center shadow" style="width: 20rem; border-radius: 10%;">
+                <div class="card-header">
+                    <h4 th:text="${date_7}"></h4>
+                </div>
+                <img th:src="${'icon/' + icon_7}" class="card-img-top">
+
+                <div class="card-body">
+                    <p class="card-text" th:text="'Température minimale : ' + ${tmin_7} + '°C'"></p>
+                    <p class="card-text" th:text="'Température maximale : ' + ${tmax_7} + '°C'"></p>
+                    <p class="card-text" th:text="'Probabilité de pluie : ' + ${probarain_7} + '%'"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
